@@ -9,6 +9,8 @@ database.sqlite*
 *.sqlite3
 *.db
 *.db-journal
+data/*
+!data/.gitkeep
 
 # Uploads directory (Exclude uploaded media files, preserve directory via .gitkeep)
 public/uploads/*

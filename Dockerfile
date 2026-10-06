@@ -33,8 +33,8 @@ RUN npm ci --only=production && npm cache clean --force
 # Copy built app and assets from builder stage
 COPY --from=builder /app /app
 
-# Ensure uploads directory exists and permissions are set
-RUN mkdir -p /app/public/uploads
+# Ensure data and uploads directories exist and permissions are set
+RUN mkdir -p /app/data /app/public/uploads
 
 # Expose port
 EXPOSE 3000

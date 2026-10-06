@@ -3,7 +3,28 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 
-const dbPath = path.join(__dirname, 'database.sqlite');
+function resolveDbPath() {
+  if (process.env.DB_PATH) {
+    return process.env.DB_PATH;
+  }
+  if (process.env.DATA_DIR) {
+    return path.join(process.env.DATA_DIR, 'database.sqlite');
+  }
+
+  const rootDb = path.join(__dirname, 'database.sqlite');
+  try {
+    if (fs.existsSync(rootDb)) {
+      const stat = fs.statSync(rootDb);
+      if (stat.isFile()) {
+        return rootDb;
+      }
+    }
+  } catch (e) {}
+
+  return path.join(__dirname, 'data', 'database.sqlite');
+}
+
+let dbPath = resolveDbPath();
 let dbInstance = null;
 
 // Save database to disk
@@ -11,6 +32,10 @@ function saveDB() {
   if (dbInstance) {
     const data = dbInstance.export();
     const buffer = Buffer.from(data);
+    const dir = path.dirname(dbPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     fs.writeFileSync(dbPath, buffer);
   }
 }
@@ -20,8 +45,26 @@ async function initDB() {
 
   const SQL = await initSqlJs();
 
-  // Load existing database or create new one
+  // If dbPath exists and is accidentally a directory (e.g. caused by Docker mounting a non-existent file),
+  // adapt by using a database file inside that directory instead of crashing with EISDIR.
   if (fs.existsSync(dbPath)) {
+    try {
+      const stat = fs.statSync(dbPath);
+      if (stat.isDirectory()) {
+        console.warn(`[DB Warning] "${dbPath}" is a directory. Using database file inside it.`);
+        dbPath = path.join(dbPath, 'database.sqlite');
+      }
+    } catch (e) {}
+  }
+
+  // Ensure target folder exists
+  const dir = path.dirname(dbPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  // Load existing database or create new one
+  if (fs.existsSync(dbPath) && fs.statSync(dbPath).isFile()) {
     const fileBuffer = fs.readFileSync(dbPath);
     dbInstance = new SQL.Database(fileBuffer);
   } else {

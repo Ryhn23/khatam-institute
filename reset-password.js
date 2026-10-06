@@ -3,13 +3,32 @@ const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, 'database.sqlite');
+function resolveDbPath() {
+  if (process.env.DB_PATH) return process.env.DB_PATH;
+  if (process.env.DATA_DIR) return path.join(process.env.DATA_DIR, 'database.sqlite');
+  
+  const rootDb = path.join(__dirname, 'database.sqlite');
+  try {
+    if (fs.existsSync(rootDb)) {
+      const stat = fs.statSync(rootDb);
+      if (stat.isFile()) return rootDb;
+      if (stat.isDirectory()) return path.join(rootDb, 'database.sqlite');
+    }
+  } catch (e) {}
+
+  const dataDb = path.join(__dirname, 'data', 'database.sqlite');
+  if (fs.existsSync(dataDb)) return dataDb;
+
+  return rootDb;
+}
+
+const dbPath = resolveDbPath();
 
 async function resetPassword() {
   console.log('Memulai proses reset password...');
 
   if (!fs.existsSync(dbPath)) {
-    console.error('Error: Database tidak ditemukan. Jalankan aplikasi terlebih dahulu.');
+    console.error(`Error: Database tidak ditemukan di "${dbPath}". Jalankan aplikasi terlebih dahulu.`);
     process.exit(1);
   }
 

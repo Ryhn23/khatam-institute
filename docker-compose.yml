@@ -13,8 +13,9 @@ services:
       - PORT=3000
       - SESSION_SECRET=${SESSION_SECRET:-khatam-institute-super-secret-production-key}
       - COOKIE_SECURE=${COOKIE_SECURE:-false}
+      - DATA_DIR=/app/data
     volumes:
-      # Persist SQLite database file
-      - ./database.sqlite:/app/database.sqlite
+      # Persist SQLite database in dedicated data directory
+      - ./data:/app/data
       # Persist user uploads
       - ./public/uploads:/app/public/uploads
