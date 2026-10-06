@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk Redaksi | <%= settings.site_name || 'Khatam Institute' %></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/output.css?v=4">
+    <!-- Theme Script -->
+    <script src="/theme.js"></script>
+</head>
+<body class="bg-[#FCFCFB] dark:bg-[#141414] font-sans flex items-center justify-center min-h-screen p-4 transition-colors duration-200 relative">
+    
+    <!-- Dark Mode Switcher top right -->
+    <div class="absolute top-6 right-6">
+        <button type="button" onclick="toggleTheme()" aria-label="Toggle Dark Mode" class="p-2.5 rounded-full bg-white dark:bg-[#1A1A1A] border border-black/[0.08] dark:border-white/[0.08] text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition shadow-sm">
+            <svg class="w-4 h-4 theme-icon-sun hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            <svg class="w-4 h-4 theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="max-w-sm w-full bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm p-8 sm:p-10 border border-black/[0.08] dark:border-white/[0.08]">
+        <div class="text-center mb-8">
+            <img src="/khatam-institute.png" alt="Logo" class="mx-auto mb-4 h-12 w-auto object-contain dark:brightness-110">
+            <h1 class="font-serif text-2xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">Portal Redaksi</h1>
+            <p class="text-neutral-500 dark:text-neutral-400 text-xs mt-1">Masuk untuk mengelola tulisan dan publikasi</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-300 p-3.5 rounded-xl mb-6 text-xs border border-red-200 dark:border-red-900/50">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/admin/login" method="POST" class="space-y-4">
+            <div>
+                <label for="username" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Nama Pengguna</label>
+                <input type="text" id="username" name="username" required class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm">
+            </div>
+            <div>
+                <label for="password" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Kata Sandi</label>
+                <input type="password" id="password" name="password" required class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm">
+            </div>
+            <button type="submit" class="w-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 py-3 px-4 rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm mt-2">
+                Masuk ke Portal
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="/" class="text-xs text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition">
+                &larr; Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+</body>
+</html>

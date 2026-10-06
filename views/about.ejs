@@ -1,0 +1,312 @@
+<%- include('partials/header', { title: 'Tentang Kami — ' + (settings.site_name || 'Khatam Institute' ) }) %>
+
+    <main class="py-12 md:py-20 transition-colors duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Editorial Hero Header -->
+            <header class="max-w-4xl mb-14 pb-10 border-b border-black/[0.08] dark:border-white/[0.08]">
+                <span
+                    class="text-xs uppercase tracking-widest font-semibold text-amber-700 dark:text-amber-400 block mb-3">
+                    Tentang Kami
+                </span>
+                <h1
+                    class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-bold tracking-tight text-neutral-900 dark:text-neutral-50 leading-[1.15] mb-6">
+                    <%= settings.about_hero_title
+                        || 'Membangun Tradisi Riset, Menegakkan Nalar Kritis, dan Menumbuhkan Keilmuan Peradaban' %>
+                </h1>
+                <p
+                    class="font-serif text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed font-normal">
+                    <%= settings.about_description
+                        || 'Khatam Institute adalah lembaga kajian keilmuan dan riset independen yang berkomitmen menumbuhkan budaya literasi, spiritualitas, dan intelektualitas.'
+                        %>
+                </p>
+            </header>
+
+            <!-- Main 12-Column Editorial Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+                <!-- Left Column: Context, Fast Nav & Info (Sticky) -->
+                <aside class="lg:col-span-4 lg:sticky lg:top-24 space-y-10">
+
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <img src="/khatam-institute.png" alt="Logo"
+                                class="h-9 w-auto object-contain dark:brightness-110">
+                            <div>
+                                <h3 class="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                                    <%= settings.site_name || 'Khatam Institute' %>
+                                </h3>
+                                <span class="text-[11px] text-neutral-500 dark:text-neutral-400">Pusat Riset & Kajian
+                                    Intelektual</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+                            Wadah pengkajian mandiri berbasis integritas ilmiah, dialog terbuka, dan komitmen keadaban.
+                        </p>
+                    </div>
+
+                    <!-- Navigation Outline -->
+                    <div class="space-y-2 border-t border-black/[0.08] dark:border-white/[0.08] pt-6">
+                        <span
+                            class="text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 block mb-3">
+                            Daftar Isi Laman
+                        </span>
+                        <ul class="text-xs space-y-2.5 text-neutral-600 dark:text-neutral-400">
+                            <li><a href="#filosofi"
+                                    class="hover:text-neutral-900 dark:hover:text-white transition">&bull; Latar
+                                    Belakang & Filosofi</a></li>
+                            <li><a href="#visi-misi"
+                                    class="hover:text-neutral-900 dark:hover:text-white transition">&bull; Visi & Misi
+                                    Kelembagaan</a></li>
+                            <li><a href="#pilar" class="hover:text-neutral-900 dark:hover:text-white transition">&bull;
+                                    Pilar & Tujuan Strategis</a></li>
+                            <li><a href="#fokus" class="hover:text-neutral-900 dark:hover:text-white transition">&bull;
+                                    Fokus Bidang Riset</a></li>
+                            <li><a href="#kontribusi"
+                                    class="hover:text-neutral-900 dark:hover:text-white transition">&bull; Publikasi &
+                                    Kontribusi</a></li>
+                        </ul>
+                    </div>
+
+                </aside>
+
+                <!-- Right Column: Rich Editorial Narrative -->
+                <article class="lg:col-span-8 space-y-16">
+
+                    <!-- Section 1: Latar Belakang & Filosofi -->
+                    <section id="filosofi" class="space-y-6">
+                        <span
+                            class="text-xs uppercase tracking-widest font-semibold text-neutral-400 dark:text-neutral-500 block">
+                            01 / Filosofi Gerakan
+                        </span>
+                        <h2
+                            class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                            Latar Belakang & Titik Berangkat
+                        </h2>
+                        <% if (settings.about_philosophy) { %>
+                            <div
+                                class="font-serif text-base sm:text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-5 font-normal whitespace-pre-line">
+                                <%= settings.about_philosophy %>
+                            </div>
+                            <% } else { %>
+                                <div
+                                    class="font-serif text-base sm:text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed space-y-5 font-normal">
+                                    <p>
+                                        Di tengah derasnya arus disrupsi informasi dan percepatan zaman, masyarakat
+                                        kontemporer kerap dihadapkan pada fragmentasi wacana dan pendangkalan literasi.
+                                        Keilmuan sering kali tereduksi menjadi konsumsi instan tanpa proses perenungan,
+                                        telaah kritis, serta ketelitian metodologis.
+                                    </p>
+                                    <p>
+                                        <%= settings.site_name || 'Khatam Institute' %> lahir sebagai ruang ikhtiar
+                                            intelektual independen untuk menghidupkan kembali tradisi ilmiah yang
+                                            mendalam. Kami meyakini bahwa kemajuan peradaban bertumpu pada kemampuan
+                                            mengintegrasikan khazanah kearifan klasik, ketajaman metodologi sains
+                                            kontemporer, dan kepekaan nurani terhadap persoalan kemanusiaan.
+                                    </p>
+                                    <p>
+                                        Melalui dedikasi riset yang berkesinambungan, kami berupaya melahirkan
+                                        gagasan-gagasan yang mencerahkan, tidak terjebak pada fanatisme sempit, serta
+                                        berorientasi pada kemaslahatan publik yang inklusif dan berkelanjutan.
+                                    </p>
+                                </div>
+                                <% } %>
+                    </section>
+
+                    <!-- Section 2: Visi & Misi Kelembagaan -->
+                    <section id="visi-misi"
+                        class="pt-12 border-t border-black/[0.08] dark:border-white/[0.08] space-y-8">
+                        <span
+                            class="text-xs uppercase tracking-widest font-semibold text-neutral-400 dark:text-neutral-500 block">
+                            02 / Arah Kelembagaan
+                        </span>
+                        <h2
+                            class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                            Visi & Misi
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div>
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 block mb-2">Visi
+                                    Utama</span>
+                                <h3 class="font-serif text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+                                    Arah Peradaban</h3>
+                                <p
+                                    class="font-serif text-neutral-700 dark:text-neutral-300 leading-relaxed text-base whitespace-pre-line">
+                                    <%= settings.vision
+                                        || 'Menjadi pusat riset dan kajian keilmuan Islam terdepan yang mencerahkan, independen, dan berdaya saing global.'
+                                        %>
+                                </p>
+                            </div>
+                            <div>
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 block mb-2">Langkah
+                                    Kerja</span>
+                                <h3 class="font-serif text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+                                    Misi Strategis</h3>
+                                <div
+                                    class="font-serif text-neutral-700 dark:text-neutral-300 leading-relaxed text-base whitespace-pre-line space-y-2">
+                                    <%= settings.mission
+                                        || '1. Mengembangkan budaya riset dan literasi kritis.\n2. Menyelenggarakan forum kajian akademik berkala.\n3. Menerbitkan karya ilmiah dan publikasi edukatif.\n4. Membangun kolaborasi riset lintas institusi.'
+                                        %>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Section 3: Pilar & Tujuan Strategis -->
+                    <% if (settings.goal_1 || settings.goal_2 || settings.goal_3 || settings.goal_4) { %>
+                        <section id="pilar"
+                            class="pt-12 border-t border-black/[0.08] dark:border-white/[0.08] space-y-8">
+                            <span
+                                class="text-xs uppercase tracking-widest font-semibold text-neutral-400 dark:text-neutral-500 block">
+                                03 / Fondasi Gerakan
+                            </span>
+                            <h2
+                                class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                                Pilar & Tujuan Strategis
+                            </h2>
+
+                            <div class="space-y-6">
+                                <% if (settings.goal_1) { %>
+                                    <div
+                                        class="flex items-start gap-4 pb-4 border-b border-black/[0.04] dark:border-white/[0.04]">
+                                        <span
+                                            class="font-mono text-xs font-bold text-amber-700 dark:text-amber-400 mt-1">01.</span>
+                                        <p
+                                            class="font-serif text-base sm:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
+                                            <%= settings.goal_1 %>
+                                        </p>
+                                    </div>
+                                    <% } %>
+                                        <% if (settings.goal_2) { %>
+                                            <div
+                                                class="flex items-start gap-4 pb-4 border-b border-black/[0.04] dark:border-white/[0.04]">
+                                                <span
+                                                    class="font-mono text-xs font-bold text-amber-700 dark:text-amber-400 mt-1">02.</span>
+                                                <p
+                                                    class="font-serif text-base sm:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
+                                                    <%= settings.goal_2 %>
+                                                </p>
+                                            </div>
+                                            <% } %>
+                                                <% if (settings.goal_3) { %>
+                                                    <div
+                                                        class="flex items-start gap-4 pb-4 border-b border-black/[0.04] dark:border-white/[0.04]">
+                                                        <span
+                                                            class="font-mono text-xs font-bold text-amber-700 dark:text-amber-400 mt-1">03.</span>
+                                                        <p
+                                                            class="font-serif text-base sm:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
+                                                            <%= settings.goal_3 %>
+                                                        </p>
+                                                    </div>
+                                                    <% } %>
+                                                        <% if (settings.goal_4) { %>
+                                                            <div
+                                                                class="flex items-start gap-4 pb-4 border-b border-black/[0.04] dark:border-white/[0.04]">
+                                                                <span
+                                                                    class="font-mono text-xs font-bold text-amber-700 dark:text-amber-400 mt-1">04.</span>
+                                                                <p
+                                                                    class="font-serif text-base sm:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal">
+                                                                    <%= settings.goal_4 %>
+                                                                </p>
+                                                            </div>
+                                                            <% } %>
+                            </div>
+                        </section>
+                        <% } %>
+
+                            <!-- Section 4: Fokus Bidang Riset -->
+                            <section id="fokus"
+                                class="pt-12 border-t border-black/[0.08] dark:border-white/[0.08] space-y-8">
+                                <span
+                                    class="text-xs uppercase tracking-widest font-semibold text-neutral-400 dark:text-neutral-500 block">
+                                    04 / Ruang Lingkup
+                                </span>
+                                <h2
+                                    class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                                    Fokus Bidang Kajian
+                                </h2>
+
+                                <% if (settings.about_focus) { %>
+                                    <div
+                                        class="font-serif text-base sm:text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal whitespace-pre-line space-y-4">
+                                        <%= settings.about_focus %>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+                                            <div class="space-y-2">
+                                                <h4
+                                                    class="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                                                    Kajian Pemikiran Islam & Filsafat</h4>
+                                                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                                    Menelaah teks-teks otoritatif klasik (turats), dinamika pemikiran
+                                                    tasawuf, falsafah, dan epistemologi Islam dalam konteks perdebatan
+                                                    modern.
+                                                </p>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h4
+                                                    class="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                                                    Sains & Sejarah Peradaban</h4>
+                                                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                                    Membaca jejak peradaban, kontribusi saintifik ilmuwan Muslim
+                                                    terdahulu, dan integrasi metode sains empiris kontemporer.
+                                                </p>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h4
+                                                    class="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                                                    Metodologi Riset & Literasi Kritis</h4>
+                                                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                                    Melatih ketelitian pembacaan naskah, analisis wacana, pengujian
+                                                    bukti empiris, dan pembinaan nalar kritis generasi muda.
+                                                </p>
+                                            </div>
+                                            <div class="space-y-2">
+                                                <h4
+                                                    class="font-serif font-bold text-base text-neutral-900 dark:text-neutral-100">
+                                                    Opini Intelektual & Isu Kontemporer</h4>
+                                                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                                    Memberikan sumbangan perspektif berbobot terhadap diskursus sosial,
+                                                    etika teknologi, dan dinamika kebudayaan global.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                            </section>
+
+                            <!-- Section 5: Publikasi & Terhubung -->
+                            <section id="kontribusi"
+                                class="pt-12 border-t border-black/[0.08] dark:border-white/[0.08] space-y-6">
+                                <span
+                                    class="text-xs uppercase tracking-widest font-semibold text-neutral-400 dark:text-neutral-500 block">
+                                    05 / Publikasi & Jejaring
+                                </span>
+                                <h2
+                                    class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+                                    Keterbukaan Publikasi & Kolaborasi
+                                </h2>
+                                <p
+                                    class="font-serif text-base sm:text-lg text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal">
+                                    Seluruh naskah riset, ulasan buku, dan tulisan ilmiah diterbitkan secara terbuka
+                                    melalui portal publikasi kami agar dapat diakses oleh peneliti, akademisi, dan
+                                    khalayak luas.
+                                </p>
+                                <div class="pt-4 flex flex-wrap items-center gap-4">
+                                    <a href="/blog"
+                                        class="inline-flex items-center gap-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm">
+                                        Jelajahi Arsip Artikel & Riset &rarr;
+                                    </a>
+                                </div>
+                            </section>
+
+                </article>
+
+            </div>
+
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>

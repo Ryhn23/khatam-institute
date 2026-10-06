@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/u5389241/public_html/brim.khatamunnabiyyin.com
+    - /bin/cp -R * $DEPLOYPATH

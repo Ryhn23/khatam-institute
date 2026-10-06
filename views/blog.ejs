@@ -1,0 +1,267 @@
+<%- include('partials/header', { title: (currentCategory ? currentCategory.name + ' — ' : '') + (searchQuery ? 'Pencarian: ' + searchQuery : 'Artikel & Riset') }) %>
+
+<section class="min-h-screen py-10 md:py-16 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Editorial Section Header & Search Form -->
+        <div class="max-w-3xl mb-8 pb-8 border-b border-black/[0.08] dark:border-white/[0.08]">
+            <span class="text-xs uppercase tracking-widest font-semibold text-amber-700 dark:text-amber-400 block mb-2">
+                Publikasi & Buletin
+            </span>
+            <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-3">
+                <% if (currentCategory) { %>
+                    <%= currentCategory.name %>
+                <% } else { %>
+                    Artikel & Kajian Ilmiah
+                <% } %>
+            </h1>
+            <p class="font-serif text-base sm:text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
+                <% if (currentCategory) { %>
+                    Arsip tulisan dan kajian ilmiah dalam kategori <%= currentCategory.name %>.
+                <% } else { %>
+                    Tulisan mendalam, telaah kritis, opini intelektual, dan hasil kajian berkala oleh para peneliti <%= settings.site_name || 'Khatam Institute' %>.
+                <% } %>
+            </p>
+
+            <!-- Search Form -->
+            <form action="/blog" method="GET" class="relative max-w-xl">
+                <% if (currentCategory) { %>
+                    <input type="hidden" name="category" value="<%= currentCategory.slug %>">
+                <% } %>
+                <div class="relative flex items-center">
+                    <svg class="w-4 h-4 text-neutral-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" 
+                        placeholder="Cari judul artikel atau topik kajian..." 
+                        class="w-full pl-10 pr-24 py-2.5 rounded-full bg-neutral-100 dark:bg-neutral-800/80 border border-transparent focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-[#1a1a1a] text-sm text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none transition shadow-sm"
+                    >
+                    <button type="submit" class="absolute right-1.5 px-4 py-1.5 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm">
+                        Cari
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Category Horizontal Filter Tabs (Clean Medium Style) -->
+        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+            <div class="flex items-center gap-6 overflow-x-auto pb-3 mb-8 scrollbar-none border-b border-black/[0.08] dark:border-white/[0.08] text-xs">
+                <a href="/blog<%= searchQuery ? '?q=' + encodeURIComponent(searchQuery) : '' %>" class="whitespace-nowrap pb-2 transition <%= !currentCategory ? 'text-neutral-950 dark:text-white border-b-2 border-neutral-900 dark:border-white font-semibold' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white' %>">
+                    Semua Kategori
+                </a>
+                <% categories.forEach(cat => { %>
+                    <a href="/blog?category=<%= cat.slug %><%= searchQuery ? '&q=' + encodeURIComponent(searchQuery) : '' %>" class="whitespace-nowrap pb-2 transition <%= (currentCategory && currentCategory.slug === cat.slug) ? 'text-neutral-950 dark:text-white border-b-2 border-neutral-900 dark:border-white font-semibold' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white' %>">
+                        <%= cat.name %>
+                    </a>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            
+            <!-- Main Editorial Feed -->
+            <div class="lg:col-span-8">
+                
+                <!-- Active Filters Indicator (Clean Text, No Boxes) -->
+                <% if ((typeof searchQuery !== 'undefined' && searchQuery) || currentCategory) { %>
+                    <div class="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-400 mb-6 pb-3 border-b border-black/[0.06] dark:border-white/[0.06]">
+                        <div class="flex items-center gap-2">
+                            <span>Menampilkan</span>
+                            <% if (currentCategory) { %>
+                                <span class="font-semibold text-neutral-900 dark:text-white"><%= currentCategory.name %></span>
+                            <% } %>
+                            <% if (searchQuery) { %>
+                                <% if (currentCategory) { %> · <% } %>
+                                kata kunci <span class="font-semibold text-neutral-900 dark:text-white">"<%= searchQuery %>"</span>
+                            <% } %>
+                            <span class="text-neutral-400 dark:text-neutral-500">(<%= totalPosts %> artikel)</span>
+                        </div>
+                        <a href="/blog" class="hover:text-neutral-950 dark:hover:text-white underline underline-offset-4 transition">
+                            Reset filter &times;
+                        </a>
+                    </div>
+                <% } %>
+
+                <div class="divide-y divide-black/[0.08] dark:divide-white/[0.08]">
+                    <% if (posts && posts.length > 0) { %>
+                        <% posts.forEach((post, index) => { %>
+                            <%
+                              const plainText = (post.content || '').replace(/<[^>]+>/g, ' ');
+                              const words = plainText.trim().split(/\s+/).filter(Boolean).length;
+                              const readTime = Math.max(1, Math.ceil(words / 200));
+                              
+                              const imgMatch = (post.content || '').match(/<img[^>]+src="([^">]+)"/);
+                              const thumbUrl = imgMatch ? imgMatch[1] : null;
+                            %>
+                            <article class="py-8 first:pt-0 transition-opacity hover:opacity-95 group">
+                                <!-- Date & Category Meta -->
+                                <div class="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400 mb-2.5">
+                                    <time datetime="<%= post.created_at %>">
+                                        <%= new Date(post.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                                    </time>
+                                    
+                                    <% if (post.category_name) { %>
+                                        <span>·</span>
+                                        <a href="/blog?category=<%= post.category_slug %>" class="hover:text-neutral-900 dark:hover:text-white transition">
+                                            <%= post.category_name %>
+                                        </a>
+                                    <% } %>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row gap-6 justify-between items-start">
+                                    <div class="flex-1">
+                                        <!-- Headline -->
+                                        <h2 class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition leading-snug mb-2">
+                                            <a href="/blog/<%= post.slug %>">
+                                                <%= post.title %>
+                                            </a>
+                                        </h2>
+
+                                        <!-- Excerpt -->
+                                        <p class="font-serif text-neutral-600 dark:text-neutral-400 text-sm sm:text-base leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3">
+                                            <%= post.meta_description || plainText.substring(0, 180) + '...' %>
+                                        </p>
+
+                                        <!-- Bottom Meta (Clean Plain Text) -->
+                                        <div class="text-xs text-neutral-400 dark:text-neutral-500">
+                                            <%= readTime %> menit baca
+                                        </div>
+                                    </div>
+
+                                    <% if (thumbUrl) { %>
+                                        <a href="/blog/<%= post.slug %>" class="flex-shrink-0 w-full sm:w-36 h-28 sm:h-28 rounded-lg overflow-hidden bg-neutral-100 dark:bg-neutral-800 border border-black/[0.06] dark:border-white/[0.08]">
+                                            <img src="<%= thumbUrl %>" alt="<%= post.title %>" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                        </a>
+                                    <% } %>
+                                </div>
+                            </article>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="py-16 text-center text-neutral-500 dark:text-neutral-400">
+                            <svg class="w-10 h-10 mx-auto mb-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                            </svg>
+                            <p class="font-serif text-lg mb-2">
+                                <% if (searchQuery || currentCategory) { %>
+                                    Tidak ada artikel yang cocok dengan kriteria filter saat ini.
+                                <% } else { %>
+                                    Belum ada artikel yang dipublikasikan saat ini.
+                                <% } %>
+                            </p>
+                            <% if (searchQuery || currentCategory) { %>
+                                <a href="/blog" class="inline-block mt-2 text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 hover:underline">
+                                    Lihat semua artikel &rarr;
+                                </a>
+                            <% } %>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Pagination System (Displayed if totalPages > 1) -->
+                <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+                    <%
+                      let querySuffix = '';
+                      if (currentCategory) querySuffix += '&category=' + encodeURIComponent(currentCategory.slug);
+                      if (typeof searchQuery !== 'undefined' && searchQuery) querySuffix += '&q=' + encodeURIComponent(searchQuery);
+                    %>
+                    <nav class="pt-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-black/[0.08] dark:border-white/[0.08] mt-6" aria-label="Navigasi Halaman">
+                        <div class="text-xs text-neutral-500 dark:text-neutral-400">
+                            Halaman <span class="font-semibold text-neutral-800 dark:text-neutral-200"><%= currentPage %></span> dari <span class="font-semibold text-neutral-800 dark:text-neutral-200"><%= totalPages %></span> (<%= totalPosts %> artikel)
+                        </div>
+                        
+                        <div class="flex items-center gap-1.5">
+                            <!-- Tombol Sebelumnya -->
+                            <% if (currentPage > 1) { %>
+                                <a href="/blog?page=<%= currentPage - 1 %><%= querySuffix %>" class="px-3.5 py-1.5 rounded-full border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+                                    &larr; Sebelumnya
+                                </a>
+                            <% } else { %>
+                                <span class="px-3.5 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-xs font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
+                                    &larr; Sebelumnya
+                                </span>
+                            <% } %>
+
+                            <!-- Nomor Halaman -->
+                            <div class="flex items-center gap-1 mx-1">
+                                <% for (let p = 1; p <= totalPages; p++) { %>
+                                    <% if (p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)) { %>
+                                        <% if (p === currentPage) { %>
+                                            <span class="w-8 h-8 rounded-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-bold flex items-center justify-center shadow-sm">
+                                                <%= p %>
+                                            </span>
+                                        <% } else { %>
+                                            <a href="/blog?page=<%= p %><%= querySuffix %>" class="w-8 h-8 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-medium text-neutral-600 dark:text-neutral-400 flex items-center justify-center transition">
+                                                <%= p %>
+                                            </a>
+                                        <% } %>
+                                    <% } else if (p === currentPage - 3 || p === currentPage + 3) { %>
+                                        <span class="w-6 text-center text-xs text-neutral-400">...</span>
+                                    <% } %>
+                                <% } %>
+                            </div>
+
+                            <!-- Tombol Berikutnya -->
+                            <% if (currentPage < totalPages) { %>
+                                <a href="/blog?page=<%= currentPage + 1 %><%= querySuffix %>" class="px-3.5 py-1.5 rounded-full border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+                                    Berikutnya &rarr;
+                                </a>
+                            <% } else { %>
+                                <span class="px-3.5 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-xs font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
+                                    Berikutnya &rarr;
+                                </span>
+                            <% } %>
+                        </div>
+                    </nav>
+                <% } %>
+
+            </div>
+
+            <!-- Sidebar (Medium Right Column) -->
+            <aside class="lg:col-span-4 space-y-10 lg:pl-6 lg:border-l border-black/[0.08] dark:border-white/[0.08]">
+                
+                <!-- About Mini Card -->
+                <div>
+                    <h3 class="font-sans text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
+                        Tentang Khatam Institute
+                    </h3>
+                    <p class="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+                        <%= settings.about_description ? (settings.about_description.length > 200 ? settings.about_description.substring(0, 200) + '...' : settings.about_description) : 'Lembaga kajian ilmiah dan keilmuan yang berfokus pada riset, literasi, dan pengembangan nalar kritis.' %>
+                    </p>
+                    <a href="/tentang" class="text-xs font-semibold text-neutral-900 dark:text-neutral-100 hover:text-amber-700 dark:hover:text-amber-400 underline underline-offset-4 transition">
+                        Pelajari selengkapnya tentang kami &rarr;
+                    </a>
+                </div>
+
+                <!-- Dynamic Categories List in Sidebar (Clean Text Links) -->
+                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                    <div>
+                        <h3 class="font-sans text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
+                            Kategori Artikel
+                        </h3>
+                        <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                            <% categories.forEach(cat => { %>
+                                <a href="/blog?category=<%= cat.slug %>" class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition <%= (currentCategory && currentCategory.slug === cat.slug) ? 'font-bold text-neutral-950 dark:text-white underline underline-offset-4' : '' %>">
+                                    <%= cat.name %>
+                                    <% if (cat.post_count) { %>
+                                        <span class="opacity-50 text-[10px]">(<%= cat.post_count %>)</span>
+                                    <% } %>
+                                </a>
+                            <% }) %>
+                        </div>
+                    </div>
+                <% } %>
+
+                <!-- Footer Mini Note -->
+                <div class="pt-6 border-t border-black/[0.08] dark:border-white/[0.08] text-xs text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                    &copy; <%= new Date().getFullYear() %> <%= settings.site_name || 'Khatam Institute' %>. Terbuka untuk kontribusi riset dan naskah ilmiah.
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,334 @@
+<%- include('partials/header', { title: 'Beranda' }) %>
+
+    <!-- Editorial Hero / Featured Carousel Section -->
+    <% if (banners && banners.length> 0) { %>
+        <section
+            class="border-b border-black/[0.08] dark:border-white/[0.08] bg-neutral-900 text-white relative overflow-hidden">
+            <div class="swiper hero-swiper w-full relative">
+                <div class="swiper-wrapper">
+                    <% banners.forEach((banner, idx)=> { %>
+                        <div class="swiper-slide relative bg-cover bg-center overflow-hidden"
+                            style="background-image: url('<%= banner.image_url %>'); background-position: center center; background-size: cover; background-repeat: no-repeat;">
+                            <!-- Refined Editorial Vignette Overlay -->
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/90 via-black/75 to-black/40">
+                            </div>
+
+                            <!-- Slide Content (Guaranteed Vertical Centering) -->
+                            <div
+                                class="relative z-10 w-full min-h-[480px] sm:min-h-[540px] md:min-h-[580px] flex items-center justify-center py-16 md:py-20">
+                                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                                    <div class="max-w-3xl">
+
+                                        <% if (banner.title) { %>
+                                            <h1
+                                                class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.15] mb-4 sm:mb-6">
+                                                <%= banner.title %>
+                                            </h1>
+                                            <% } %>
+
+                                                <% if (banner.subtitle) { %>
+                                                    <p
+                                                        class="font-serif text-base sm:text-lg md:text-xl text-neutral-300 mb-8 font-normal leading-relaxed max-w-2xl">
+                                                        <%= banner.subtitle %>
+                                                    </p>
+                                                    <% } %>
+
+                                                        <% if (banner.link_url && banner.button_text) { %>
+                                                            <div>
+                                                                <a href="<%= banner.link_url %>"
+                                                                    class="inline-flex items-center gap-2 bg-white text-neutral-900 hover:bg-neutral-100 font-semibold px-6 py-3 rounded-full text-sm transition shadow-sm">
+                                                                    <%= banner.button_text %>
+                                                                        <svg class="w-4 h-4" fill="none"
+                                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                                            <path stroke-linecap="round"
+                                                                                stroke-linejoin="round" stroke-width="2"
+                                                                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                                                        </svg>
+                                                                </a>
+                                                            </div>
+                                                            <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+
+                <% if (banners.length> 1) { %>
+                    <div class="swiper-pagination !bottom-6"></div>
+                    <% } %>
+            </div>
+        </section>
+        <% } else { %>
+            <!-- Minimalist Editorial Lead Header if no banner -->
+            <section
+                class="border-b border-black/[0.08] dark:border-white/[0.08] py-20 md:py-28 bg-[#FCFCFB] dark:bg-[#141414]">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                    <span
+                        class="text-xs uppercase tracking-widest font-semibold text-amber-700 dark:text-amber-400 block mb-3">
+                        Khatam Institute
+                    </span>
+                    <h1
+                        class="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-6 leading-[1.15]">
+                        <%= settings.site_name || 'Khatam Institute' %>
+                    </h1>
+                    <p
+                        class="font-serif text-lg sm:text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-2xl mx-auto mb-8 font-normal">
+                        <%= settings.site_tagline
+                            || 'Pusat riset independen, telaah kritis keilmuan, dan pembinaan tradisi intelektual.' %>
+                    </p>
+                    <div class="flex items-center justify-center gap-4">
+                        <a href="/blog"
+                            class="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-2.5 rounded-full text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition">
+                            Mulai Membaca Artikel
+                        </a>
+                        <a href="#profil"
+                            class="text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition">
+                            Profil Lembaga &rarr;
+                        </a>
+                    </div>
+                </div>
+            </section>
+            <% } %>
+
+                <!-- Medium-Style Main Content: Feed & Sidebar -->
+                <section class="py-12 md:py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+                            <!-- Main Feed (Left Column) -->
+                            <div class="lg:col-span-8">
+
+                                <div
+                                    class="flex items-center justify-between pb-4 border-b border-black/[0.08] dark:border-white/[0.08] mb-6">
+                                    <h2
+                                        class="text-xs uppercase tracking-widest font-semibold text-neutral-500 dark:text-neutral-400">
+                                        Tulisan Terbaru
+                                    </h2>
+                                    <a href="/blog"
+                                        class="text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline">
+                                        Lihat Semua &rarr;
+                                    </a>
+                                </div>
+
+                                <div class="divide-y divide-black/[0.08] dark:divide-white/[0.08]">
+                                    <% if (posts && posts.length> 0) { %>
+                                        <% posts.slice(0, 8).forEach((post, index)=> { %>
+                                            <% const plainText=(post.content || '' ).replace(/<[^>]+>/g, ' ');
+                                                const words = plainText.trim().split(/\s+/).filter(Boolean).length;
+                                                const readTime = Math.max(1, Math.ceil(words / 200));
+                                                %>
+                                                <article class="py-7 first:pt-2 group">
+                                                    <!-- Post Date Meta -->
+                                                    <div class="text-xs text-neutral-500 dark:text-neutral-400 mb-2">
+                                                        <time datetime="<%= post.created_at %>">
+                                                            <%= new Date(post.created_at).toLocaleDateString('id-ID', {
+                                                                day: 'numeric' , month: 'long' , year: 'numeric' }) %>
+                                                        </time>
+                                                    </div>
+
+                                                    <div>
+                                                        <h3
+                                                            class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition leading-snug mb-2">
+                                                            <a href="/blog/<%= post.slug %>">
+                                                                <%= post.title %>
+                                                            </a>
+                                                        </h3>
+                                                        <p
+                                                            class="font-serif text-neutral-600 dark:text-neutral-400 text-sm sm:text-base leading-relaxed line-clamp-2 mb-3">
+                                                            <%= post.meta_description || plainText.substring(0, 160)
+                                                                + '...' %>
+                                                        </p>
+
+                                                        <div
+                                                            class="flex items-center gap-2 text-xs text-neutral-500 dark:text-neutral-400">
+                                                            <% if (post.category_name) { %>
+                                                                <a href="/blog?category=<%= post.category_slug %>"
+                                                                    class="hover:text-neutral-900 dark:hover:text-white transition">
+                                                                    <%= post.category_name %>
+                                                                </a>
+                                                                <span>·</span>
+                                                                <% } %>
+                                                                    <span>
+                                                                        <%= readTime %> menit baca
+                                                                    </span>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <div class="py-12 text-center text-neutral-500">
+                                                            Belum ada artikel yang dipublikasikan.
+                                                        </div>
+                                                        <% } %>
+                                </div>
+
+                                <% if (posts && posts.length> 8) { %>
+                                    <div class="pt-8 border-t border-black/[0.08] dark:border-white/[0.08]">
+                                        <a href="/blog"
+                                            class="inline-flex items-center gap-2 text-sm font-semibold text-neutral-900 dark:text-neutral-100 hover:text-amber-700 dark:hover:text-amber-400 transition">
+                                            Jelajahi seluruh arsip artikel
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                    <% } %>
+
+                            </div>
+
+                            <!-- Sidebar (Right Column) -->
+                            <aside
+                                class="lg:col-span-4 space-y-10 lg:pl-6 lg:border-l border-black/[0.08] dark:border-white/[0.08]">
+
+                                <!-- Profile Section (Unboxed) -->
+                                <div>
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <img src="/khatam-institute.png" alt="Logo"
+                                            class="h-8 w-auto object-contain dark:brightness-110">
+                                        <div>
+                                            <h4
+                                                class="font-serif font-bold text-sm text-neutral-900 dark:text-neutral-100">
+                                                <%= settings.site_name || 'Khatam Institute' %>
+                                            </h4>
+                                            <span class="text-[11px] text-neutral-500 dark:text-neutral-400">Pusat Riset
+                                                & Kajian</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed mb-3">
+                                        Khatam Institute adalah lembaga pendidikan dan riset independen yang fokus pada pengembangan wawasan keilmuan, kajian pemikiran Islam, literasi kritis, dan peradaban kontemporer.
+                                    </p>
+                                    <a href="#profil"
+                                        class="text-xs font-semibold text-neutral-900 dark:text-neutral-100 hover:text-amber-700 dark:hover:text-amber-400 inline-flex items-center gap-1 transition">
+                                        Lihat profil lembaga &rarr;
+                                    </a>
+                                </div>
+
+                                <!-- Topics (Clean Editorial Links) -->
+                                <div>
+                                    <h4
+                                        class="font-sans text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
+                                        Topik Kajian
+                                    </h4>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                                        <% if (categories && categories.length> 0) { %>
+                                            <% categories.forEach(cat=> { %>
+                                                <a href="/blog?category=<%= cat.slug %>"
+                                                    class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition">
+                                                    <%= cat.name %>
+                                                </a>
+                                                <% }) %>
+                                                    <% } else { %>
+                                                        <a href="/blog"
+                                                            class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition">
+                                                            Semua Topik
+                                                        </a>
+                                                        <% } %>
+                                    </div>
+                                </div>
+
+                            </aside>
+
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Profil Lembaga Section (Aligned with max-w-7xl Editorial Grid) -->
+                <section id="profil" class="py-20 md:py-28 border-t border-black/[0.08] dark:border-white/[0.08]">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+                            <!-- Left Column: Title -->
+                            <div class="lg:col-span-4">
+                                <span
+                                    class="text-xs uppercase tracking-widest font-semibold text-amber-700 dark:text-amber-400 block mb-3">
+                                    Profil Lembaga
+                                </span>
+                                <h2
+                                    class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 mb-4 leading-[1.15]">
+                                    <%= settings.about_title || 'Profil Khatam Institute' %>
+                                </h2>
+                                <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-6">
+                                    Pusat riset, literasi kritis, dan tradisi keilmuan peradaban.
+                                </p>
+                                <a href="/tentang"
+                                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-900 dark:text-white hover:text-amber-700 dark:hover:text-amber-400 underline underline-offset-4 transition">
+                                    Pelajari selengkapnya tentang kami &rarr;
+                                </a>
+                            </div>
+
+                            <!-- Right Column: Description, Vision & Mission -->
+                            <div class="lg:col-span-8 space-y-12">
+                                <div
+                                    class="font-serif text-lg sm:text-xl text-neutral-700 dark:text-neutral-300 leading-relaxed font-normal">
+                                    <p class="whitespace-pre-line">
+                                        <%= settings.about_description
+                                            || 'Lembaga kajian keilmuan dan riset independen yang berkomitmen menumbuhkan budaya literasi, spiritualitas, dan intelektualitas.'
+                                            %>
+                                    </p>
+                                </div>
+
+                                <% if (settings.vision || settings.mission) { %>
+                                    <div
+                                        class="grid grid-cols-1 md:grid-cols-2 gap-10 pt-10 border-t border-black/[0.08] dark:border-white/[0.08]">
+                                        <% if (settings.vision) { %>
+                                            <div>
+                                                <span
+                                                    class="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block mb-2">Visi</span>
+                                                <h3
+                                                    class="font-serif text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+                                                    Arah Peradaban</h3>
+                                                <p
+                                                    class="font-serif text-neutral-700 dark:text-neutral-300 leading-relaxed text-base whitespace-pre-line">
+                                                    <%= settings.vision %>
+                                                </p>
+                                            </div>
+                                            <% } %>
+                                                <% if (settings.mission) { %>
+                                                    <div>
+                                                        <span
+                                                            class="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block mb-2">Misi</span>
+                                                        <h3
+                                                            class="font-serif text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">
+                                                            Langkah Kerja</h3>
+                                                        <div
+                                                            class="font-serif text-neutral-700 dark:text-neutral-300 leading-relaxed text-base whitespace-pre-line space-y-2">
+                                                            <%= settings.mission %>
+                                                        </div>
+                                                    </div>
+                                                    <% } %>
+                                    </div>
+                                    <% } %>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Swiper Carousel Init -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        if (document.querySelector('.hero-swiper')) {
+                            new Swiper('.hero-swiper', {
+                                loop: true,
+                                autoplay: {
+                                    delay: 7000,
+                                    disableOnInteraction: false,
+                                },
+                                effect: 'fade',
+                                fadeEffect: { crossFade: true },
+                                speed: 1000,
+                                pagination: {
+                                    el: '.swiper-pagination',
+                                    clickable: true,
+                                },
+                            });
+                        }
+                    });
+                </script>
+
+                <%- include('partials/footer') %>

@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+::selection {
+    background-color: #fef08a; /* soft gold highlight */
+    color: #1c1917;
+}
+
+.dark ::selection {
+    background-color: #854d0e;
+    color: #fef9c3;
+}
+
+/* Medium-Style Editorial Story Typography */
+.quill-content {
+    font-family: 'Lora', 'Newsreader', Georgia, serif;
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.85;
+    letter-spacing: -0.003em;
+    color: #242424;
+}
+
+.dark .quill-content {
+    color: #d6d3d1;
+}
+
+.quill-content h1, 
+.quill-content h2, 
+.quill-content h3 {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #111827;
+    margin-top: 2.2em;
+    margin-bottom: 0.75em;
+    line-height: 1.3;
+}
+
+.dark .quill-content h1,
+.dark .quill-content h2,
+.dark .quill-content h3 {
+    color: #f3f4f6;
+}
+
+.quill-content h1 {
+    font-size: 1.875rem; /* 30px */
+}
+
+.quill-content h2 {
+    font-size: 1.5rem; /* 24px */
+}
+
+.quill-content h3 {
+    font-size: 1.25rem; /* 20px */
+}
+
+.quill-content p {
+    margin-bottom: 1.75em;
+    line-height: 1.85;
+}
+
+.quill-content ul {
+    list-style-type: disc;
+    padding-left: 1.75em;
+    margin-bottom: 1.75em;
+}
+
+.quill-content ol {
+    list-style-type: decimal;
+    padding-left: 1.75em;
+    margin-bottom: 1.75em;
+}
+
+.quill-content li {
+    margin-bottom: 0.5em;
+    line-height: 1.8;
+}
+
+.quill-content a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: #C59B27;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1.5px;
+    transition: all 0.2s ease;
+}
+
+.quill-content a:hover {
+    color: #0B3B73;
+    text-decoration-color: #0B3B73;
+}
+
+.dark .quill-content a:hover {
+    color: #facc15;
+    text-decoration-color: #facc15;
+}
+
+.quill-content blockquote {
+    border-left: 3px solid #242424;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-style: italic;
+    color: #52525b;
+    font-size: 1.35rem;
+    line-height: 1.75;
+}
+
+.dark .quill-content blockquote {
+    border-left-color: #C59B27;
+    color: #a1a1aa;
+}
+
+.quill-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 2.5rem auto;
+    display: block;
+}
+
+/* Subtle hairline dividers */
+.hairline-b {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.dark .hairline-b {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Hero Carousel Perfect Vertical Centering */
+.hero-swiper .swiper-slide {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+}

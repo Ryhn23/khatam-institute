@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= banner ? 'Edit Banner' : 'Tambah Banner Baru' %> | Redaksi <%= settings.site_name || 'Khatam Institute' %></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/output.css?v=4">
+    <!-- Theme Script -->
+    <script src="/theme.js"></script>
+</head>
+<body class="bg-[#FCFCFB] dark:bg-[#141414] font-sans min-h-screen flex flex-col transition-colors duration-200">
+    <%- include('../partials/admin-navbar', { page: 'banners' }) %>
+
+    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 mb-1">
+                    <a href="/admin/banners" class="hover:underline">Banner Hero</a>
+                    <span>/</span>
+                    <span><%= banner ? 'Edit' : 'Tambah Baru' %></span>
+                </div>
+                <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight"><%= banner ? 'Edit Banner Carousel' : 'Tambah Banner Carousel' %></h1>
+            </div>
+            <a href="/admin/banners" class="text-xs uppercase tracking-wider font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali
+            </a>
+        </div>
+
+        <form action="<%= banner ? '/admin/banners/' + banner.id : '/admin/banners' %>" method="POST" enctype="multipart/form-data" class="bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm border border-black/[0.08] dark:border-white/[0.08] p-6 sm:p-8">
+            
+            <div class="mb-6">
+                <label for="title" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Judul Banner (Heading)</label>
+                <input type="text" id="title" name="title" value="<%= banner ? (banner.title || '') : '' %>" placeholder="Contoh: Pusat Riset & Kajian Keilmuan Islam" class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-lg font-serif">
+            </div>
+
+            <div class="mb-6">
+                <label for="subtitle" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Subjudul / Deskripsi</label>
+                <textarea id="subtitle" name="subtitle" rows="3" placeholder="Deskripsi singkat yang tampil di bawah judul..." class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm font-serif leading-relaxed"><%= banner ? (banner.subtitle || '') : '' %></textarea>
+            </div>
+
+            <!-- Image Upload or URL -->
+            <div class="mb-6 p-5 bg-neutral-50 dark:bg-neutral-900/50 rounded-xl border border-black/[0.06] dark:border-white/[0.08]">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 mb-1">Gambar Banner</label>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-4">Disarankan rasio lanskap (16:9 atau 1920x800 px) agar tampilan tajam dan proporsional.</p>
+                
+                <% if (banner && banner.image_url) { %>
+                    <div class="mb-4">
+                        <span class="block text-xs font-semibold text-neutral-500 mb-1">Gambar Saat Ini:</span>
+                        <img src="<%= banner.image_url %>" alt="Preview" class="h-32 rounded-lg object-cover border border-black/[0.08] dark:border-white/[0.08]">
+                    </div>
+                <% } %>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="image_file" class="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">Upload File Gambar</label>
+                        <input type="file" id="image_file" name="image_file" accept="image/*" class="w-full text-xs text-neutral-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-neutral-900 dark:file:bg-white file:text-white dark:file:text-neutral-900 cursor-pointer">
+                    </div>
+                    <div>
+                        <label for="image_url" class="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">Atau Gunakan Tautan URL</label>
+                        <input type="url" id="image_url" name="image_url" value="<%= banner ? (banner.image_url || '') : '' %>" placeholder="https://..." class="w-full px-3 py-2 text-xs border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="button_text" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Teks Tombol (CTA) <span class="text-neutral-400 font-normal lowercase">- opsional</span></label>
+                    <input type="text" id="button_text" name="button_text" value="<%= banner ? (banner.button_text || '') : '' %>" placeholder="Contoh: Pelajari Lebih Lanjut" class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 text-sm">
+                </div>
+                <div>
+                    <label for="link_url" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Tautan URL Tombol</label>
+                    <input type="text" id="link_url" name="link_url" value="<%= banner ? (banner.link_url || '') : '' %>" placeholder="Contoh: #tentang atau /blog" class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 text-sm">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="order_num" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Nomor Urutan Tampil</label>
+                    <input type="number" id="order_num" name="order_num" value="<%= banner ? banner.order_num : 1 %>" class="w-full px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 text-sm">
+                </div>
+                <div class="flex items-center pt-6">
+                    <label class="relative flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="is_active" value="1" <%= (!banner || banner.is_active) ? 'checked' : '' %> class="w-4 h-4 text-amber-600 rounded border-neutral-300 dark:border-neutral-700 focus:ring-amber-500">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-200">Aktifkan Banner di Carousel</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 border-t border-black/[0.06] dark:border-white/[0.08] pt-6">
+                <a href="/admin/banners" class="px-6 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-full text-neutral-700 dark:text-neutral-300 text-xs uppercase tracking-wider font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Batal</a>
+                <button type="submit" class="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold px-8 py-2.5 rounded-full text-xs uppercase tracking-wider hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm">
+                    <%= banner ? 'Simpan Perubahan' : 'Tambahkan Banner' %>
+                </button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

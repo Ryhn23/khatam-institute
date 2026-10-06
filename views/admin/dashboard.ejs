@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Redaksi | <%= settings.site_name || 'Khatam Institute' %></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/output.css?v=4">
+    <!-- Theme Script -->
+    <script src="/theme.js"></script>
+</head>
+<body class="bg-[#FCFCFB] dark:bg-[#141414] font-sans min-h-screen flex flex-col transition-colors duration-200">
+    <%- include('../partials/admin-navbar', { page: 'posts' }) %>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">Kelola Artikel</h1>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm mt-1">Daftar semua publikasi dan artikel kajian di Khatam Institute.</p>
+            </div>
+            <div class="flex items-center gap-3 self-start sm:self-auto flex-wrap">
+                <a href="/admin/categories" class="border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition flex items-center justify-center gap-2 shadow-sm">
+                    <svg class="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                    Kelola Kategori
+                </a>
+                <a href="/admin/posts/new" class="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition flex items-center justify-center gap-2 shadow-sm">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tulis Artikel Baru
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm border border-black/[0.08] dark:border-white/[0.08] overflow-hidden">
+            <div class="p-5 border-b border-black/[0.06] dark:border-white/[0.08] flex justify-between items-center bg-neutral-50/50 dark:bg-neutral-900/50">
+                <h2 class="text-xs uppercase tracking-wider font-semibold text-neutral-600 dark:text-neutral-300">Total Artikel: <%= posts.length %></h2>
+            </div>
+            
+            <% if (posts.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-black/[0.06] dark:border-white/[0.08] text-neutral-500 dark:text-neutral-400 text-[11px] uppercase tracking-wider">
+                                <th class="p-4 font-semibold">Judul & Slug</th>
+                                <th class="p-4 font-semibold">Kategori</th>
+                                <th class="p-4 font-semibold">Tanggal</th>
+                                <th class="p-4 font-semibold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-black/[0.05] dark:divide-white/[0.06]">
+                            <% posts.forEach(post => { %>
+                                <tr class="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40 transition">
+                                    <td class="p-4">
+                                        <div class="font-serif font-bold text-neutral-900 dark:text-neutral-100 text-base mb-0.5">
+                                            <a href="/blog/<%= post.slug %>" target="_blank" class="hover:underline">
+                                                <%= post.title %>
+                                            </a>
+                                        </div>
+                                        <div class="text-xs text-neutral-400 dark:text-neutral-500 font-mono">/<%= post.slug %></div>
+                                    </td>
+                                    <td class="p-4 whitespace-nowrap">
+                                        <% if (post.category_name) { %>
+                                            <span class="inline-block bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-black/[0.04] dark:border-white/[0.06]">
+                                                <%= post.category_name %>
+                                            </span>
+                                        <% } else { %>
+                                            <span class="text-xs text-neutral-400 dark:text-neutral-500 italic">Tanpa Kategori</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="p-4 text-neutral-600 dark:text-neutral-400 text-xs whitespace-nowrap">
+                                        <%= new Date(post.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                    </td>
+                                    <td class="p-4 text-right whitespace-nowrap space-x-3 text-xs font-semibold">
+                                        <a href="/admin/posts/<%= post.id %>/edit" class="text-amber-700 dark:text-amber-400 hover:underline">Edit</a>
+                                        <form action="/admin/posts/<%= post.id %>/delete" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus artikel ini?');">
+                                            <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="p-12 text-center text-neutral-500 dark:text-neutral-400">
+                    <p class="font-serif text-lg">Belum ada artikel. Silakan buat artikel pertama Anda.</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

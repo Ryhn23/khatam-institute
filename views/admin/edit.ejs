@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= post ? 'Edit Artikel' : 'Tulis Artikel' %> | Redaksi <%= settings.site_name || 'Khatam Institute' %></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/output.css?v=4">
+    <!-- Theme Script -->
+    <script src="/theme.js"></script>
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+    <style>
+        .ql-editor {
+            min-height: 400px;
+            font-size: 18px;
+            font-family: 'Lora', 'Newsreader', Georgia, serif;
+            line-height: 1.8;
+        }
+        /* Dark mode overrides for Quill */
+        .dark .ql-toolbar {
+            background-color: #1a1a1a;
+            border-color: #292929 !important;
+        }
+        .dark .ql-toolbar .ql-stroke {
+            stroke: #d4d4d4;
+        }
+        .dark .ql-toolbar .ql-fill {
+            fill: #d4d4d4;
+        }
+        .dark .ql-toolbar .ql-picker {
+            color: #d4d4d4;
+        }
+        .dark .ql-toolbar .ql-picker-options {
+            background-color: #1a1a1a;
+            border-color: #292929;
+            color: #d4d4d4;
+        }
+        .dark .ql-container {
+            background-color: #141414;
+            border-color: #292929 !important;
+            color: #e5e5e5;
+        }
+        /* Dark mode overrides for Flatpickr */
+        .dark .flatpickr-calendar {
+            background: #1a1a1a !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+            border: 1px solid #292929 !important;
+            color: #e5e5e5 !important;
+        }
+        .dark .flatpickr-months, .dark .flatpickr-months .flatpickr-month {
+            background: #1a1a1a !important;
+            color: #e5e5e5 !important;
+            fill: #e5e5e5 !important;
+        }
+        .dark .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .dark .flatpickr-current-month input.cur-year {
+            color: #e5e5e5 !important;
+        }
+        .dark .flatpickr-weekdays, .dark span.flatpickr-weekday {
+            background: #1a1a1a !important;
+            color: #a3a3a3 !important;
+        }
+        .dark .flatpickr-day {
+            color: #d4d4d4 !important;
+        }
+        .dark .flatpickr-day:hover {
+            background: #262626 !important;
+        }
+        .dark .flatpickr-day.selected {
+            background: #C59B27 !important;
+            border-color: #C59B27 !important;
+            color: #141414 !important;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body class="bg-[#FCFCFB] dark:bg-[#141414] font-sans min-h-screen flex flex-col transition-colors duration-200">
+    <%- include('../partials/admin-navbar', { page: 'posts' }) %>
+
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 mb-1">
+                    <a href="/admin" class="hover:underline">Artikel</a>
+                    <span>/</span>
+                    <span><%= post ? 'Edit' : 'Tulis Baru' %></span>
+                </div>
+                <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+                    <%= post ? 'Edit Artikel' : 'Tulis Artikel Baru' %>
+                </h1>
+            </div>
+            <a href="/admin" class="text-xs uppercase tracking-wider font-semibold text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali
+            </a>
+        </div>
+
+        <form action="<%= post ? '/admin/posts/' + post.id : '/admin/posts' %>" method="POST"
+            class="bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm border border-black/[0.08] dark:border-white/[0.08] p-6 sm:p-8" id="postForm">
+            
+            <div class="mb-6">
+                <label for="title" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Judul Artikel</label>
+                <input type="text" id="title" name="title" value="<%= post ? post.title : '' %>" required
+                    placeholder="Masukkan judul artikel..."
+                    class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-lg font-serif">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Kategori Dropdown -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="category_id" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300">
+                            Kategori Artikel
+                        </label>
+                        <a href="/admin/categories" target="_blank" class="text-[11px] text-amber-700 dark:text-amber-400 hover:underline">
+                            + Kelola Kategori
+                        </a>
+                    </div>
+                    <select id="category_id" name="category_id" class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm cursor-pointer">
+                        <option value="">-- Pilih Kategori (Opsional) --</option>
+                        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                            <% categories.forEach(cat => { %>
+                                <option value="<%= cat.id %>" <%= (post && post.category_id == cat.id) ? 'selected' : '' %>>
+                                    <%= cat.name %>
+                                </option>
+                            <% }) %>
+                        <% } %>
+                    </select>
+                </div>
+
+                <!-- Custom Tanggal Publikasi -->
+                <div>
+                    <label for="created_at" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+                        Tanggal Publikasi <span class="text-neutral-400 font-normal lowercase">(custom)</span>
+                    </label>
+                    <% 
+                        let defaultDate = '';
+                        if (post && post.created_at) {
+                            const match = String(post.created_at).match(/^(\d{4})-(\d{2})-(\d{2})/);
+                            if (match) {
+                                defaultDate = `${match[3]}/${match[2]}/${match[1]}`;
+                            } else {
+                                try {
+                                    const dObj = new Date(post.created_at);
+                                    const y = dObj.getFullYear();
+                                    const m = String(dObj.getMonth() + 1).padStart(2, '0');
+                                    const d = String(dObj.getDate()).padStart(2, '0');
+                                    defaultDate = `${d}/${m}/${y}`;
+                                } catch(e) {}
+                            }
+                        }
+                        if (!defaultDate) {
+                            const now = new Date();
+                            const y = now.getFullYear();
+                            const m = String(now.getMonth() + 1).padStart(2, '0');
+                            const d = String(now.getDate()).padStart(2, '0');
+                            defaultDate = `${d}/${m}/${y}`;
+                        }
+                    %>
+                    <input type="text" id="created_at" name="created_at" value="<%= defaultDate %>" required
+                        placeholder="DD/MM/YYYY (Contoh: 05/09/2026)"
+                        class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm cursor-pointer">
+                    <span class="text-[11px] text-neutral-400 mt-1 block">Format: Tanggal/Bulan/Tahun (DD/MM/YYYY)</span>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="meta_description" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">
+                    Deskripsi Ringkas / Subjudul <span class="text-neutral-400 font-normal lowercase">(opsional)</span>
+                </label>
+                <textarea id="meta_description" name="meta_description" rows="2"
+                    placeholder="Ringkasan atau lead paragraph artikel yang menarik..."
+                    class="w-full px-4 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm font-serif"><%= post ? post.meta_description : '' %></textarea>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-2">Konten Tulisan</label>
+                <div class="rounded-lg overflow-hidden border border-neutral-300 dark:border-neutral-700">
+                    <div id="editor"><%- post ? post.content : '' %></div>
+                </div>
+                <input type="hidden" id="content" name="content">
+            </div>
+
+            <div class="flex justify-end gap-3 border-t border-black/[0.06] dark:border-white/[0.08] pt-6">
+                <a href="/admin"
+                    class="px-6 py-2.5 border border-neutral-300 dark:border-neutral-700 rounded-full text-neutral-700 dark:text-neutral-300 text-xs uppercase tracking-wider font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Batal</a>
+                <button type="submit"
+                    class="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold px-8 py-2.5 rounded-full text-xs uppercase tracking-wider hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm">
+                    <%= post ? 'Simpan Perubahan' : 'Publikasikan Tulisan' %>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Quill JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <!-- Flatpickr JS & Indonesian Locale -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+    <script>
+        flatpickr('#created_at', {
+            locale: 'id',
+            dateFormat: 'd/m/Y',
+            altFormat: 'd/m/Y',
+            allowInput: true,
+            disableMobile: true
+        });
+
+        var quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'indent': '-1' }, { 'indent': '+1' }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+
+        document.getElementById('postForm').onsubmit = function () {
+            var content = document.querySelector('input[name=content]');
+            content.value = quill.root.innerHTML;
+        };
+    </script>
+</body>
+
+</html>

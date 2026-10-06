@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= typeof title !=='undefined' ? title + ' — ' + (settings.site_name || 'Khatam Institute' ) :
+            (settings.site_name || 'Khatam Institute' ) + ' — ' + (settings.site_tagline
+            || 'Pusat Riset & Kajian Intelektual' ) %>
+    </title>
+    <meta name="description"
+        content="<%= typeof meta_description !== 'undefined' && meta_description ? meta_description : (settings.about_description ? settings.about_description.substring(0, 160) : 'Khatam Institute — Pusat Kajian Riset dan Intelektual') %>">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- Swiper Carousel CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/output.css?v=5">
+    <!-- Theme Script (Flash Prevention) -->
+    <script src="/theme.js"></script>
+</head>
+
+<body
+    class="bg-[#FCFCFB] dark:bg-[#141414] text-[#242424] dark:text-[#E6E6E6] font-sans antialiased selection:bg-amber-100 dark:selection:bg-amber-950 selection:text-neutral-900 dark:selection:text-amber-200 transition-colors duration-200">
+    <div class="flex flex-col min-h-screen overflow-x-hidden w-full relative">
+
+        <!-- Medium-style Clean Editorial Navbar -->
+        <header
+            class="sticky top-0 z-50 bg-[#FCFCFB]/90 dark:bg-[#141414]/90 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.08] transition-colors duration-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Brand / Logo -->
+                    <div class="flex items-center gap-3">
+                        <a href="/" class="flex items-center group transition">
+                            <img src="/khatam-institute.png" alt="<%= settings.site_name || 'Khatam Institute' %>"
+                                class="h-9 sm:h-10 w-auto object-contain dark:brightness-110 transition-transform group-hover:scale-[1.02]">
+                        </a>
+                    </div>
+
+                    <!-- Navigation Links & Actions -->
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="/"
+                            class="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition">Beranda</a>
+                        <a href="/#profil"
+                            class="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition">Profil</a>
+                        <a href="/tentang"
+                            class="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition">Tentang</a>
+                        <a href="/blog"
+                            class="text-sm font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition">Artikel
+                            & Riset</a>
+
+                        <div class="h-4 w-px bg-neutral-200 dark:bg-neutral-800"></div>
+
+                        <!-- Dark Mode Switcher -->
+                        <button type="button" onclick="toggleTheme()" aria-label="Toggle Dark Mode"
+                            class="p-2 rounded-full text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800/80 transition focus:outline-none">
+                            <svg class="w-4 h-4 theme-icon-sun hidden" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                            <svg class="w-4 h-4 theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                </path>
+                            </svg>
+                        </button>
+
+
+                    </div>
+
+                    <!-- Mobile Action & Drawer Toggle -->
+                    <div class="flex items-center md:hidden gap-1">
+                        <button type="button" onclick="toggleTheme()" aria-label="Toggle Dark Mode"
+                            class="p-2 rounded-full text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition focus:outline-none">
+                            <svg class="w-4 h-4 theme-icon-sun hidden" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                            <svg class="w-4 h-4 theme-icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button type="button"
+                            class="p-2 rounded-md text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none"
+                            aria-controls="mobile-menu" aria-expanded="false"
+                            onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Drawer -->
+            <div class="md:hidden hidden bg-[#FCFCFB] dark:bg-[#141414] border-t border-black/[0.06] dark:border-white/[0.08]"
+                id="mobile-menu">
+                <div class="px-4 py-3 space-y-1">
+                    <a href="/"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Beranda</a>
+                    <a href="/#profil"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Profil</a>
+                    <a href="/tentang"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Tentang</a>
+                    <a href="/blog"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Artikel
+                        & Riset</a>
+                    <div class="pt-2 border-t border-neutral-100 dark:border-neutral-800">
+                        <a href="/admin"
+                            class="block px-3 py-2 rounded-md text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800">Panel
+                            Admin</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow">

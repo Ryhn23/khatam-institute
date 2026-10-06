@@ -1,0 +1,20 @@
+services:
+  khatam-institute:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: khatam-institute:latest
+    container_name: khatam_institute_app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-7575}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - SESSION_SECRET=${SESSION_SECRET:-khatam-institute-super-secret-production-key}
+      - COOKIE_SECURE=${COOKIE_SECURE:-false}
+    volumes:
+      # Persist SQLite database file
+      - ./database.sqlite:/app/database.sqlite
+      # Persist user uploads
+      - ./public/uploads:/app/public/uploads

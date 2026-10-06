@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Kategori Artikel | Redaksi <%= settings.site_name || 'Khatam Institute' %></title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/output.css?v=4">
+    <!-- Theme Script -->
+    <script src="/theme.js"></script>
+</head>
+<body class="bg-[#FCFCFB] dark:bg-[#141414] font-sans min-h-screen flex flex-col transition-colors duration-200">
+    <%- include('../partials/admin-navbar', { page: 'categories' }) %>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <!-- Breadcrumb & Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div>
+                <div class="flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 mb-1">
+                    <a href="/admin" class="hover:underline">Artikel</a>
+                    <span>/</span>
+                    <span>Kategori</span>
+                </div>
+                <h1 class="font-serif text-3xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">Kelola Kategori Artikel</h1>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm mt-1">Atur klasifikasi topik dan taksonomi tulisan untuk pembaca.</p>
+            </div>
+            <a href="/admin" class="border border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition flex items-center justify-center gap-1.5 self-start sm:self-auto shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Kembali ke Artikel
+            </a>
+        </div>
+
+        <% if (error) { %>
+            <div class="bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 p-4 rounded-xl mb-6 border border-red-200 dark:border-red-900/50 text-sm">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (success) { %>
+            <div class="bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 p-4 rounded-xl mb-6 border border-green-200 dark:border-green-900/50 text-sm">
+                <%= success %>
+            </div>
+        <% } %>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left: Form Tambah Kategori -->
+            <div class="lg:col-span-4 bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm border border-black/[0.08] dark:border-white/[0.08] p-6">
+                <h2 class="text-xs uppercase tracking-wider font-semibold text-neutral-900 dark:text-neutral-100 mb-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Tambah Kategori Baru
+                </h2>
+                <form action="/admin/categories" method="POST" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Nama Kategori</label>
+                        <input type="text" id="name" name="name" required placeholder="Contoh: Sejarah Islam" class="w-full px-3.5 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm">
+                    </div>
+                    <div>
+                        <label for="slug" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Slug URL <span class="text-neutral-400 font-normal lowercase">(opsional)</span></label>
+                        <input type="text" id="slug" name="slug" placeholder="Otomatis jika dikosongkan" class="w-full px-3.5 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 text-sm font-mono text-xs">
+                        <span class="text-[11px] text-neutral-400 mt-1 block">Digunakan pada tautan: /blog?category=slug</span>
+                    </div>
+                    <button type="submit" class="w-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold py-2.5 px-4 rounded-full text-xs uppercase tracking-wider hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm mt-2">
+                        Simpan Kategori
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Daftar Kategori -->
+            <div class="lg:col-span-8 bg-white dark:bg-[#1A1A1A] rounded-2xl shadow-sm border border-black/[0.08] dark:border-white/[0.08] overflow-hidden">
+                <div class="p-5 border-b border-black/[0.06] dark:border-white/[0.08] flex justify-between items-center bg-neutral-50/50 dark:bg-neutral-900/50">
+                    <h2 class="text-xs uppercase tracking-wider font-semibold text-neutral-600 dark:text-neutral-300">
+                        Total Kategori: <%= categories.length %>
+                    </h2>
+                </div>
+
+                <% if (categories.length > 0) { %>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-black/[0.06] dark:border-white/[0.08] text-neutral-500 dark:text-neutral-400 text-[11px] uppercase tracking-wider">
+                                    <th class="p-4 font-semibold">Nama Kategori</th>
+                                    <th class="p-4 font-semibold">Slug</th>
+                                    <th class="p-4 font-semibold text-center">Jumlah Artikel</th>
+                                    <th class="p-4 font-semibold text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-black/[0.05] dark:divide-white/[0.06]">
+                                <% categories.forEach(cat => { %>
+                                    <tr class="hover:bg-neutral-50/80 dark:hover:bg-neutral-800/40 transition">
+                                        <td class="p-4">
+                                            <div class="font-serif font-bold text-neutral-900 dark:text-neutral-100 text-sm">
+                                                <%= cat.name %>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-xs font-mono text-neutral-500 dark:text-neutral-400">
+                                            /<%= cat.slug %>
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <a href="/blog?category=<%= cat.slug %>" target="_blank" class="inline-block bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-xs font-semibold px-2.5 py-0.5 rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-700 transition">
+                                                <%= cat.post_count || 0 %> artikel
+                                            </a>
+                                        </td>
+                                        <td class="p-4 text-right whitespace-nowrap space-x-3 text-xs font-semibold">
+                                            <button type="button" onclick="openEditModal(<%= cat.id %>, '<%= cat.name.replace(/'/g, "\\'") %>', '<%= cat.slug %>')" class="text-amber-700 dark:text-amber-400 hover:underline">
+                                                Edit
+                                            </button>
+                                            <form action="/admin/categories/<%= cat.id %>/delete" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus kategori ini? Artikel yang menggunakan kategori ini akan diubah menjadi tanpa kategori.');">
+                                                <button type="submit" class="text-red-600 dark:text-red-400 hover:underline">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="p-12 text-center text-neutral-500 dark:text-neutral-400">
+                        <p class="font-serif text-lg">Belum ada kategori artikel.</p>
+                    </div>
+                <% } %>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Edit Kategori -->
+    <div id="editModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1A1A1A] rounded-2xl max-w-md w-full p-6 shadow-xl border border-black/[0.08] dark:border-white/[0.08]">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-black/[0.06] dark:border-white/[0.08]">
+                <h3 class="font-serif font-bold text-lg text-neutral-900 dark:text-neutral-100">Edit Kategori</h3>
+                <button type="button" onclick="closeEditModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 text-xl font-bold">&times;</button>
+            </div>
+            <form id="editForm" method="POST" class="space-y-4">
+                <div>
+                    <label for="modal_name" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Nama Kategori</label>
+                    <input type="text" id="modal_name" name="name" required class="w-full px-3.5 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 text-sm focus:ring-2 focus:ring-amber-500/50">
+                </div>
+                <div>
+                    <label for="modal_slug" class="block text-xs uppercase tracking-wider font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">Slug URL</label>
+                    <input type="text" id="modal_slug" name="slug" required class="w-full px-3.5 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-[#202020] text-neutral-900 dark:text-neutral-100 text-xs font-mono focus:ring-2 focus:ring-amber-500/50">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 border border-neutral-300 dark:border-neutral-700 rounded-full text-xs font-semibold text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-full text-xs font-semibold hover:bg-neutral-800 dark:hover:bg-neutral-100 transition shadow-sm">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(id, name, slug) {
+            document.getElementById('editForm').action = '/admin/categories/' + id + '/edit';
+            document.getElementById('modal_name').value = name;
+            document.getElementById('modal_slug').value = slug;
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
