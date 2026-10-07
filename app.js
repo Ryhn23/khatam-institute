@@ -71,25 +71,62 @@ app.use(helmet({
   contentSecurityPolicy: false, // Disabled for inline scripts/styles (AOS, Swiper, Quill)
 }));
 
-// Security: CORS Restricted to *.khatamunnabiyyin.net and localhost development
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    try {
-      const url = new URL(origin);
-      if (
-        url.hostname === 'localhost' ||
-        url.hostname === '127.0.0.1' ||
-        url.hostname === 'khatamunnabiyyin.net' ||
-        url.hostname.endsWith('.khatamunnabiyyin.net')
-      ) {
-        return callback(null, true);
-      }
-    } catch (e) {}
-    return callback(new Error('Akses diblokir oleh kebijakan keamanan CORS.'));
-  },
-  credentials: true
-}));
+// Security: CORS Configuration
+const corsOptionsDelegate = (req, callback) => {
+  const origin = req.header('Origin');
+  const corsOptions = { credentials: true };
+
+  // Allow requests with no origin or string "null" (direct navigations, standard form POSTs, curl, privacy mode)
+  if (!origin || origin === 'null') {
+    corsOptions.origin = true;
+    return callback(null, corsOptions);
+  }
+
+  try {
+    const originUrl = new URL(origin);
+    const originHost = originUrl.host.toLowerCase();
+    const originHostname = originUrl.hostname.toLowerCase();
+    const reqHost = (req.get('host') || '').toLowerCase();
+    const reqHostname = (req.hostname || '').toLowerCase();
+
+    // 1. Same-origin requests (Origin host matches server Host) are always allowed
+    if (reqHost && (originHost === reqHost || originHostname === reqHostname)) {
+      corsOptions.origin = true;
+      return callback(null, corsOptions);
+    }
+
+    // 2. Allowed domain whitelist (*.khatamunnabiyyin.net, localhost, 127.0.0.1, khataminstitute)
+    const defaultAllowedDomains = [
+      'khatamunnabiyyin.net',
+      'khataminstitute.com',
+      'khatam-institute.com',
+      'localhost',
+      '127.0.0.1'
+    ];
+
+    const envOrigins = (process.env.ALLOWED_ORIGINS || '')
+      .split(',')
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+
+    const allAllowed = [...defaultAllowedDomains, ...envOrigins];
+
+    const isAllowed = allAllowed.some(domain => 
+      originHostname === domain || originHostname.endsWith('.' + domain)
+    );
+
+    if (isAllowed) {
+      corsOptions.origin = true;
+      return callback(null, corsOptions);
+    }
+  } catch (e) {}
+
+  // For untrusted cross-origin requests, disable CORS headers cleanly without throwing a 500 error
+  corsOptions.origin = false;
+  return callback(null, corsOptions);
+};
+
+app.use(cors(corsOptionsDelegate));
 
 // Security: Rate Limiting
 const limiter = rateLimit({
